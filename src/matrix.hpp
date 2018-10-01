@@ -11,6 +11,7 @@ class Matrix {
 
     public:
     Matrix(unsigned dim_x, unsigned dim_y);
+    Matrix(unsigned dim_x, unsigned dim_y, double elements);
     Matrix(unsigned dim_x, unsigned dim_y, double elements[]);
     unsigned getDimX() const;
     unsigned getDimY() const;
@@ -20,7 +21,7 @@ class Matrix {
     Matrix operator*(Matrix& rhs) const;
     double det() const;
     Matrix getMinorSubmatrix(unsigned x, unsigned y) const;
-    
+    Matrix f(double (*f)(double)) const;    
 };
 
 #endif

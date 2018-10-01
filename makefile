@@ -7,4 +7,4 @@ matrix.a: matrix.o
 	ar rcs lib/matrix.a obj/matrix.o
 
 clean:
-	clean rm -f obj/* lib/*
+	clean rm -f obj/*.o lib/*.a

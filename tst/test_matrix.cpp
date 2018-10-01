@@ -1,18 +1,24 @@
 #include "catch.hpp"
 #include "../src/matrix.hpp"
+#include "math.h"
 
 TEST_CASE("Constructor") {
     Matrix mat1(2, 2);
     REQUIRE(mat1(1, 1) == 0);
 
-    double elems[] = {1, -2, 3, -4, 5, 6};
-    Matrix mat2(2, 3, elems);
-    REQUIRE(mat2(0, 0) == 1);
-    REQUIRE(mat2(0, 1) == -2);
-    REQUIRE(mat2(0, 2) == 3);
-    REQUIRE(mat2(1, 0) == -4);
-    REQUIRE(mat2(1, 1) == 5);
-    REQUIRE(mat2(1, 2) == 6);
+    double elems2 = -2;
+    Matrix mat2(2, 1, elems2);
+    REQUIRE(mat2(0, 0) == -2);
+    REQUIRE(mat2(1, 0) == -2);
+    
+    double elems3[] = {1, -2, 3, -4, 5, 6};
+    Matrix mat3(2, 3, elems3);
+    REQUIRE(mat3(0, 0) == 1);
+    REQUIRE(mat3(0, 1) == -2);
+    REQUIRE(mat3(0, 2) == 3);
+    REQUIRE(mat3(1, 0) == -4);
+    REQUIRE(mat3(1, 1) == 5);
+    REQUIRE(mat3(1, 2) == 6);
 }
 
 
@@ -72,4 +78,13 @@ TEST_CASE("Determinant") {
     double elems3[] = {1, 2, 3, 6, 5, 4, 9, 7, 8};
     Matrix mat3(3, 3, elems3);
     REQUIRE(mat3.det() == -21);
+}
+
+TEST_CASE("Function") {
+    double elems[] = {1, 4, 9};
+    Matrix mat(3, 1, elems);
+    Matrix out = mat.f(sqrt);
+    REQUIRE(out(0, 0) == 1);
+    REQUIRE(out(1, 0) == 2);
+    REQUIRE(out(2, 0) == 3);
 }

@@ -10,6 +10,13 @@ Matrix::Matrix(unsigned dim_x, unsigned dim_y) {
     this->dim_y = dim_y;
 }
 
+Matrix::Matrix(unsigned dim_x, unsigned dim_y, double elements) {
+    this->elements = new double[dim_x * dim_y];
+    std::fill_n(this->elements, dim_x * dim_y, elements);
+    this->dim_x = dim_x;
+    this->dim_y = dim_y;
+}
+
 Matrix::Matrix(unsigned dim_x, unsigned dim_y, double elements[]) {
     this->elements = new double[dim_x * dim_y];
     std::copy(elements, elements + dim_x * dim_y, this->elements);
@@ -116,3 +123,11 @@ Matrix Matrix::getMinorSubmatrix(unsigned x, unsigned y) const {
     return Matrix(sub_dim, sub_dim, sub_elements);
 }
 
+Matrix Matrix::f(double (*f)(double)) const {
+    double new_elements[dim_x * dim_y];
+    for (int i = 0; i < dim_x * dim_y; i++) {
+        new_elements[i] = (*f)(elements[i]);
+    }
+
+    return Matrix(dim_x, dim_y, new_elements);
+}

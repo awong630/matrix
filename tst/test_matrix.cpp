@@ -26,22 +26,27 @@ TEST_CASE("Getter and Setter") {
     Matrix mat1(2, 2);
     mat1(0, 1) = 5;
     REQUIRE(mat1(0, 0) == 0);
-    REQUIRE(mat1(0, 1) == 5.0);
+    REQUIRE(mat1(0, 1) == 5);
     REQUIRE(mat1(1, 0) == 0);
     REQUIRE(mat1(1, 1) == 0);
 }
 
-TEST_CASE("Addition") {
+TEST_CASE("Addition and Subtraction") {
     double elems1[] = {1, 2, 3, 4};
     Matrix mat1(2, 2, elems1);
     double elems2[] = {4, -2, 3, -1};
     Matrix mat2(2, 2, elems2);
     Matrix mat3 = mat1 + mat2;
-
     REQUIRE(mat3(0, 0) == 5);
     REQUIRE(mat3(0, 1) == 0);
     REQUIRE(mat3(1, 0) == 6);
     REQUIRE(mat3(1, 1) == 3);
+    
+    Matrix mat4 = mat1 - mat2;
+    REQUIRE(mat4(0, 0) == -3);
+    REQUIRE(mat4(0, 1) == 4);
+    REQUIRE(mat4(1, 0) == 0);
+    REQUIRE(mat4(1, 1) == 5);
 }
 
 TEST_CASE("Multiplication") {

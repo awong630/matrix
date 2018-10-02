@@ -18,6 +18,7 @@ class Matrix {
     double& operator()(int x, int y);
     double  operator()(int x, int y) const;
     Matrix operator+(Matrix& rhs) const;
+    Matrix operator-(Matrix& rhs) const;
     Matrix operator*(Matrix& rhs) const;
     Matrix transpose() const;
     double det() const;

@@ -4,39 +4,39 @@
 #include <stdexcept>
 #include "matrix.hpp"
 
-Matrix::Matrix(unsigned dim_x, unsigned dim_y) {
+Matrix::Matrix(int dim_x, int dim_y) {
     elements_ = new double[dim_x * dim_y] {};
     dim_x_ = dim_x;
     dim_y_ = dim_y;
 }
 
-Matrix::Matrix(unsigned dim_x, unsigned dim_y, double element) {
+Matrix::Matrix(int dim_x, int dim_y, double element) {
     elements_ = new double[dim_x * dim_y];
     std::fill_n(elements_, dim_x * dim_y, element);
     dim_x_ = dim_x;
     dim_y_ = dim_y;
 }
 
-Matrix::Matrix(unsigned dim_x, unsigned dim_y, double elements[]) {
+Matrix::Matrix(int dim_x, int dim_y, double elements[]) {
     elements_ = new double[dim_x * dim_y];
     std::copy(elements, elements + dim_x * dim_y, elements_);
     dim_x_ = dim_x;
     dim_y_ = dim_y;
 }
 
-unsigned Matrix::getDimX() const {
+int Matrix::getDimX() const {
     return dim_x_;
 }
 
-unsigned Matrix::getDimY() const {
+int Matrix::getDimY() const {
     return dim_y_;
 }
 
-double Matrix::operator()(unsigned x, unsigned y) const {
+double Matrix::operator()(int x, int y) const {
     return elements_[x * dim_y_ + y];
 }
 
-double& Matrix::operator()(unsigned x, unsigned y) {
+double& Matrix::operator()(int x, int y) {
     return elements_[x * dim_y_ + y];
 }
 
@@ -56,7 +56,7 @@ Matrix Matrix::operator+(Matrix& rhs) const {
 }
 
 Matrix Matrix::operator*(Matrix& rhs) const {
-    unsigned mid_dim = dim_y_;
+    int mid_dim = dim_y_;
     if (mid_dim != rhs.dim_x_) {
         throw std::invalid_argument("Dimensions mismatch (Must be (IxJ) * (JxH)");
     }
@@ -90,7 +90,7 @@ double Matrix::det() const {
     }
 
     if (dim_x_ == 1) {
-        // 1x1 determinent
+        // 1x1 determinant
         return (*this)(0, 0);
     } else if (dim_x_ == 2) {
         // 2x2 determinant
@@ -107,15 +107,15 @@ double Matrix::det() const {
     }
 }
 
-Matrix Matrix::getMinorSubmatrix(unsigned x, unsigned y) const {
+Matrix Matrix::getMinorSubmatrix(int x, int y) const {
     // Get the submatrix corresponding to the minor of an element
     if (dim_x_ != dim_y_) {
         throw std::domain_error("Must be a square matrix");
     }
     
-    unsigned sub_dim = dim_x_ - 1;
+    int sub_dim = dim_x_ - 1;
     double sub_elements[sub_dim * sub_dim];
-    unsigned ind = 0;
+    int ind = 0;
     for (int i = 0; i < dim_x_; i++) {
         if (i == x) {
             continue;

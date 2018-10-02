@@ -31,7 +31,7 @@ TEST_CASE("Getter and Setter") {
     REQUIRE(mat1(1, 1) == 0);
 }
 
-TEST_CASE("Addition and Subtraction") {
+TEST_CASE("Element Math") {
     double elems1[] = {1, 2, 3, 4};
     Matrix mat1(2, 2, elems1);
     double elems2[] = {4, -2, 3, -1};
@@ -47,6 +47,12 @@ TEST_CASE("Addition and Subtraction") {
     REQUIRE(mat4(0, 1) == 4);
     REQUIRE(mat4(1, 0) == 0);
     REQUIRE(mat4(1, 1) == 5);
+    
+    Matrix mat5 = mat1.elementMultiplies(mat2);
+    REQUIRE(mat5(0, 0) == 4);
+    REQUIRE(mat5(0, 1) == -4);
+    REQUIRE(mat5(1, 0) == 9);
+    REQUIRE(mat5(1, 1) == -4);
 }
 
 TEST_CASE("Multiplication") {

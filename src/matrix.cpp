@@ -86,6 +86,19 @@ Matrix Matrix::operator*(Matrix& rhs) const {
     return out;
 }
 
+Matrix Matrix::elementMultiplies(Matrix& rhs) const {
+    if (dim_x_ != rhs.dim_x_ || dim_y_ != rhs.dim_y_) {
+        throw std::invalid_argument("Dimensions must be equal");
+    }
+    
+    double new_elements[dim_x_ * dim_y_];
+    for (int i = 0; i < dim_x_ * dim_y_; i++) {
+        new_elements[i] = elements_[i] * rhs.elements_[i];
+    }
+    
+    return Matrix(dim_x_, dim_y_, new_elements);
+}
+
 Matrix Matrix::transpose() const {
     double new_elements[dim_x_ * dim_y_];
     for (int i = 0; i < dim_x_ * dim_y_; i++) {

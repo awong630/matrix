@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/matrix.hpp"
+#include "../inc/matrix.hpp"
 #include "math.h"
 
 TEST_CASE("Constructor") {
@@ -53,6 +53,19 @@ TEST_CASE("Multiplication") {
 
     REQUIRE(mat3(0, 0) == 10);
     REQUIRE(mat3(1, 0) == 28);
+}
+
+TEST_CASE("Transpose") {
+    double elems[] = {1, 2, 3, 4, 5, 6};
+    Matrix mat(3, 2, elems);
+    Matrix tran = mat.transpose();
+
+    REQUIRE(tran(0, 0) == 1);
+    REQUIRE(tran(0, 1) == 3);
+    REQUIRE(tran(0, 2) == 5);
+    REQUIRE(tran(1, 0) == 2);
+    REQUIRE(tran(1, 1) == 4);
+    REQUIRE(tran(1, 2) == 6);
 }
 
 TEST_CASE("getMinorSubmatrix") {

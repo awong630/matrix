@@ -20,6 +20,7 @@ class Matrix {
     Matrix operator+(Matrix& rhs) const;
     Matrix operator-(Matrix& rhs) const;
     Matrix operator*(Matrix& rhs) const;
+    Matrix operator*(double rhs) const;
     Matrix elementMultiplies(Matrix& rhs) const;
     Matrix transpose() const;
     double det() const;

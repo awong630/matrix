@@ -61,9 +61,16 @@ TEST_CASE("Multiplication") {
     double elems2[] = {3, 2, 1};
     Matrix mat2(3, 1, elems2);
     Matrix mat3 = mat1 * mat2;
-
     REQUIRE(mat3(0, 0) == 10);
     REQUIRE(mat3(1, 0) == 28);
+
+    Matrix mat4 = mat1 * 2;
+    REQUIRE(mat4(0, 0) == 2);
+    REQUIRE(mat4(0, 1) == 4);
+    REQUIRE(mat4(0, 2) == 6);
+    REQUIRE(mat4(1, 0) == 8);
+    REQUIRE(mat4(1, 1) == 10);
+    REQUIRE(mat4(1, 2) == 12);
 }
 
 TEST_CASE("Transpose") {

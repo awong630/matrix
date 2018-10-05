@@ -17,11 +17,11 @@ class Matrix {
     int getDimY() const;
     double& operator()(int x, int y);
     double  operator()(int x, int y) const;
-    Matrix operator+(Matrix& rhs) const;
-    Matrix operator-(Matrix& rhs) const;
-    Matrix operator*(Matrix& rhs) const;
+    Matrix operator+(const Matrix& rhs) const;
+    Matrix operator-(const Matrix& rhs) const;
+    Matrix operator*(const Matrix& rhs) const;
     Matrix operator*(double rhs) const;
-    Matrix elementMultiplies(Matrix& rhs) const;
+    Matrix elementMultiplies(const Matrix& rhs) const;
     Matrix transpose() const;
     double det() const;
     Matrix getMinorSubmatrix(int x, int y) const;

@@ -40,7 +40,7 @@ double& Matrix::operator()(int x, int y) {
     return elements_[x * dim_y_ + y];
 }
 
-Matrix Matrix::operator+(Matrix& rhs) const {
+Matrix Matrix::operator+(const Matrix& rhs) const {
     if (dim_x_ != rhs.dim_x_ || dim_y_ != rhs.dim_y_) {
         throw std::invalid_argument("Dimensions must be equal");
     }
@@ -53,7 +53,7 @@ Matrix Matrix::operator+(Matrix& rhs) const {
     return Matrix(dim_x_, dim_y_, new_elements);
 }
 
-Matrix Matrix::operator-(Matrix& rhs) const {
+Matrix Matrix::operator-(const Matrix& rhs) const {
     if (dim_x_ != rhs.dim_x_ || dim_y_ != rhs.dim_y_) {
         throw std::invalid_argument("Dimensions must be equal");
     }
@@ -66,10 +66,10 @@ Matrix Matrix::operator-(Matrix& rhs) const {
     return Matrix(dim_x_, dim_y_, new_elements);
 }
 
-Matrix Matrix::operator*(Matrix& rhs) const {
+Matrix Matrix::operator*(const Matrix& rhs) const {
     int mid_dim = dim_y_;
     if (mid_dim != rhs.dim_x_) {
-        throw std::invalid_argument("Dimensions mismatch (Must be (IxJ) * (JxH)");
+        throw std::invalid_argument("Dimensions mismatch (Must be (IxJ) * (JxH))");
     }
 
     Matrix out(dim_x_, rhs.dim_y_);
@@ -95,7 +95,7 @@ Matrix Matrix::operator*(double rhs) const {
     return Matrix(dim_x_, dim_y_, new_elements);
 }
 
-Matrix Matrix::elementMultiplies(Matrix& rhs) const {
+Matrix Matrix::elementMultiplies(const Matrix& rhs) const {
     if (dim_x_ != rhs.dim_x_ || dim_y_ != rhs.dim_y_) {
         throw std::invalid_argument("Dimensions must be equal");
     }

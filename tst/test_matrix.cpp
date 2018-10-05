@@ -1,3 +1,4 @@
+#include <iostream>
 #include "catch.hpp"
 #include "../inc/matrix.hpp"
 #include "math.h"
@@ -19,6 +20,12 @@ TEST_CASE("Constructor") {
     REQUIRE(mat3(1, 0) == -4);
     REQUIRE(mat3(1, 1) == 5);
     REQUIRE(mat3(1, 2) == 6);
+
+    Matrix rand_mat = Matrix::random(2, 2, -1, 1, 1990);
+    REQUIRE(rand_mat(0, 0) == Approx(-0.663448));
+    REQUIRE(rand_mat(0, 1) == Approx(0.10162));
+    REQUIRE(rand_mat(1, 0) == Approx(-0.403476));
+    REQUIRE(rand_mat(1, 1) == Approx(-0.710199));
 }
 
 

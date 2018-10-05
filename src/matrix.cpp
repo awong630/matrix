@@ -1,16 +1,9 @@
-#include <iostream>
-#include <math.h>
-#include <algorithm>
-#include <stdexcept>
 #include "matrix.hpp"
-
-Matrix::Matrix(int dim_x, int dim_y) {
-    elements_ = new double[dim_x * dim_y] {};
-    dim_x_ = dim_x;
-    dim_y_ = dim_y;
-}
+#include <stdexcept>
+#include <random>
 
 Matrix::Matrix(int dim_x, int dim_y, double element) {
+    // Initialize Matrix with single element value
     elements_ = new double[dim_x * dim_y];
     std::fill_n(elements_, dim_x * dim_y, element);
     dim_x_ = dim_x;
@@ -18,10 +11,24 @@ Matrix::Matrix(int dim_x, int dim_y, double element) {
 }
 
 Matrix::Matrix(int dim_x, int dim_y, double elements[]) {
+    // Initialize Matrix with element array
     elements_ = new double[dim_x * dim_y];
     std::copy(elements, elements + dim_x * dim_y, elements_);
     dim_x_ = dim_x;
     dim_y_ = dim_y;
+}
+
+Matrix Matrix::random(int dim_x, int dim_y, double min, double max, unsigned seed) {
+    // Initialize Matrix with random elements [min, max] using seed
+    std::mt19937 mt(seed);
+    std::uniform_real_distribution<double> dist(min, std::nextafter(max, std::numeric_limits<double>::max()));
+
+    double elements[dim_x * dim_y];
+    for (int i = 0; i < dim_x * dim_y; i++) {
+        elements[i] = dist(mt);
+    }
+
+    return Matrix(dim_x, dim_y, elements);
 }
 
 int Matrix::getDimX() const {

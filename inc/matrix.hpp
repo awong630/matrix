@@ -1,6 +1,5 @@
-#ifndef MATRIX_H_
-#define MATRIX_H_
-#include <vector>
+#ifndef MATRIX_HPP_
+#define MATRIX_HPP_
 
 using namespace std;
 
@@ -10,9 +9,9 @@ class Matrix {
     int dim_y_;
 
     public:
-    Matrix(int dim_x, int dim_y);
-    Matrix(int dim_x, int dim_y, double element);
+    Matrix(int dim_x, int dim_y, double element = 0);
     Matrix(int dim_x, int dim_y, double elements[]);
+    static Matrix random(int dim_x, int dim_y, double min, double max, unsigned seed);
     int getDimX() const;
     int getDimY() const;
     double& operator()(int x, int y);

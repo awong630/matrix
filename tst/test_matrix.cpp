@@ -1,4 +1,3 @@
-#include <iostream>
 #include "catch.hpp"
 #include "../inc/matrix.hpp"
 #include "math.h"
@@ -36,6 +35,14 @@ TEST_CASE("Getter and Setter") {
     REQUIRE(mat1(0, 1) == 5);
     REQUIRE(mat1(1, 0) == 0);
     REQUIRE(mat1(1, 1) == 0);
+
+    double elems2[] = {1, 2, 3, 4};
+    Matrix mat2(2, 2, elems2);
+    mat1 = mat2;
+    REQUIRE(mat1(0, 0) == 1);
+    REQUIRE(mat1(0, 1) == 2);
+    REQUIRE(mat1(1, 0) == 3);
+    REQUIRE(mat1(1, 1) == 4);
 }
 
 TEST_CASE("Element Math") {

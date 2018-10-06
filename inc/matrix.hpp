@@ -11,11 +11,13 @@ class Matrix {
     public:
     Matrix(int dim_x, int dim_y, double element = 0);
     Matrix(int dim_x, int dim_y, double elements[]);
+    ~Matrix();
     static Matrix random(int dim_x, int dim_y, double min, double max, unsigned seed);
     int getDimX() const;
     int getDimY() const;
     double& operator()(int x, int y);
     double  operator()(int x, int y) const;
+    Matrix& operator=(const Matrix& rhs);
     Matrix operator+(const Matrix& rhs) const;
     Matrix operator-(const Matrix& rhs) const;
     Matrix operator*(const Matrix& rhs) const;

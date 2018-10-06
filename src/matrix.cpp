@@ -18,6 +18,10 @@ Matrix::Matrix(int dim_x, int dim_y, double elements[]) {
     dim_y_ = dim_y;
 }
 
+Matrix::~Matrix() {
+    delete []elements_;
+}
+
 Matrix Matrix::random(int dim_x, int dim_y, double min, double max, unsigned seed) {
     // Initialize Matrix with random elements [min, max] using seed
     std::mt19937 mt(seed);
@@ -37,6 +41,14 @@ int Matrix::getDimX() const {
 
 int Matrix::getDimY() const {
     return dim_y_;
+}
+
+Matrix& Matrix::operator=(const Matrix& rhs) {
+    if (dim_x_ != rhs.dim_x_ || dim_y_ != rhs.dim_y_) {
+        throw std::invalid_argument("Dimensions must be equal");
+    }
+    std::copy(rhs.elements_, rhs.elements_ + rhs.dim_x_ * rhs.dim_y_, elements_);
+    return *this;
 }
 
 double Matrix::operator()(int x, int y) const {

@@ -1,0 +1,2 @@
+g++ -std=c++11 test*.cpp ../lib/matrix.a -o run_tests.exe -I../inc -I/usr/local/inc/catch
+./run_tests.exe

@@ -1,23 +1,26 @@
 #ifndef MATRIX_HPP_
 #define MATRIX_HPP_
-
-using namespace std;
+#include <vector>
 
 class Matrix {
-    double* elements_;
+    // Private variables
+    std::vector<double> elements_;
     int dim_x_;
     int dim_y_;
-
+    
+    // Private functions
+    template <typename func> Matrix elementwise(func f) const;
+    template <typename func> Matrix elementwise(const Matrix& rhs, func f) const;
+    
     public:
+    // Public functions
     Matrix(int dim_x, int dim_y, double element = 0);
-    Matrix(int dim_x, int dim_y, double elements[]);
-    ~Matrix();
+    Matrix(int dim_x, int dim_y, const std::vector<double>& elements);
     static Matrix random(int dim_x, int dim_y, double min, double max, unsigned seed);
     int getDimX() const;
     int getDimY() const;
     double& operator()(int x, int y);
     double  operator()(int x, int y) const;
-    Matrix& operator=(const Matrix& rhs);
     Matrix operator+(const Matrix& rhs) const;
     Matrix operator-(const Matrix& rhs) const;
     Matrix operator*(const Matrix& rhs) const;
@@ -26,7 +29,7 @@ class Matrix {
     Matrix transpose() const;
     double det() const;
     Matrix getMinorSubmatrix(int x, int y) const;
-    Matrix f(double (*f)(double)) const;    
+    Matrix f(double (*f)(double)) const;
 };
 
 #endif

@@ -1,25 +1,19 @@
 #include "matrix.hpp"
-#include <stdexcept>
+#include <algorithm>
+#include <functional>
 #include <random>
+#include <stdexcept>
 
-Matrix::Matrix(int dim_x, int dim_y, double element) {
+Matrix::Matrix(int dim_x, int dim_y, double element) : elements_(dim_x * dim_y, element) {
     // Initialize Matrix with single element value
-    elements_ = new double[dim_x * dim_y];
-    std::fill_n(elements_, dim_x * dim_y, element);
     dim_x_ = dim_x;
     dim_y_ = dim_y;
 }
 
-Matrix::Matrix(int dim_x, int dim_y, double elements[]) {
+Matrix::Matrix(int dim_x, int dim_y, const std::vector<double>& elements) : elements_(elements) {
     // Initialize Matrix with element array
-    elements_ = new double[dim_x * dim_y];
-    std::copy(elements, elements + dim_x * dim_y, elements_);
     dim_x_ = dim_x;
     dim_y_ = dim_y;
-}
-
-Matrix::~Matrix() {
-    delete []elements_;
 }
 
 Matrix Matrix::random(int dim_x, int dim_y, double min, double max, unsigned seed) {
@@ -27,10 +21,8 @@ Matrix Matrix::random(int dim_x, int dim_y, double min, double max, unsigned see
     std::mt19937 mt(seed);
     std::uniform_real_distribution<double> dist(min, std::nextafter(max, std::numeric_limits<double>::max()));
 
-    double elements[dim_x * dim_y];
-    for (int i = 0; i < dim_x * dim_y; i++) {
-        elements[i] = dist(mt);
-    }
+    std::vector<double> elements(dim_x * dim_y);
+    std::generate(elements.begin(), elements.end(), [&mt, &dist](){return dist(mt);});
 
     return Matrix(dim_x, dim_y, elements);
 }
@@ -43,46 +35,28 @@ int Matrix::getDimY() const {
     return dim_y_;
 }
 
-Matrix& Matrix::operator=(const Matrix& rhs) {
+/*Matrix& Matrix::operator=(const Matrix& rhs) {
     if (dim_x_ != rhs.dim_x_ || dim_y_ != rhs.dim_y_) {
         throw std::invalid_argument("Dimensions must be equal");
     }
     std::copy(rhs.elements_, rhs.elements_ + rhs.dim_x_ * rhs.dim_y_, elements_);
     return *this;
-}
+}*/
 
 double Matrix::operator()(int x, int y) const {
-    return elements_[x * dim_y_ + y];
+    return elements_.at(x * dim_y_ + y);
 }
 
 double& Matrix::operator()(int x, int y) {
-    return elements_[x * dim_y_ + y];
+    return elements_.at(x * dim_y_ + y);
 }
 
 Matrix Matrix::operator+(const Matrix& rhs) const {
-    if (dim_x_ != rhs.dim_x_ || dim_y_ != rhs.dim_y_) {
-        throw std::invalid_argument("Dimensions must be equal");
-    }
-
-    double new_elements[dim_x_ * dim_y_];
-    for (int i = 0; i < dim_x_ * dim_y_; i++) {
-        new_elements[i] = elements_[i] + rhs.elements_[i];
-    }
-    
-    return Matrix(dim_x_, dim_y_, new_elements);
+    return elementwise(rhs, std::plus<double>());
 }
 
 Matrix Matrix::operator-(const Matrix& rhs) const {
-    if (dim_x_ != rhs.dim_x_ || dim_y_ != rhs.dim_y_) {
-        throw std::invalid_argument("Dimensions must be equal");
-    }
-    
-    double new_elements[dim_x_ * dim_y_];
-    for (int i = 0; i < dim_x_ * dim_y_; i++) {
-        new_elements[i] = elements_[i] - rhs.elements_[i];
-    }
-    
-    return Matrix(dim_x_, dim_y_, new_elements);
+    return elementwise(rhs, std::minus<double>());
 }
 
 Matrix Matrix::operator*(const Matrix& rhs) const {
@@ -106,34 +80,45 @@ Matrix Matrix::operator*(const Matrix& rhs) const {
 }
 
 Matrix Matrix::operator*(double rhs) const {
-    double new_elements[dim_x_ * dim_y_];
-    for (int i = 0; i < dim_x_ * dim_y_; i++) {
-        new_elements[i] = elements_[i] * rhs;
-    }
-    
-    return Matrix(dim_x_, dim_y_, new_elements);
+    return elementwise(std::bind(std::multiplies<double>(), std::placeholders::_1, rhs));
 }
 
 Matrix Matrix::elementMultiplies(const Matrix& rhs) const {
+    return elementwise(rhs, std::multiplies<double>());
+}
+
+template <typename func> Matrix Matrix::elementwise(func f) const {
+    std::vector<double> elements;
+    elements.reserve(elements_.size());
+
+    std::transform(elements_.begin(), elements_.end(),
+        std::back_inserter(elements), f);
+
+    return Matrix(dim_x_, dim_y_, elements);
+}
+
+template <typename func> Matrix Matrix::elementwise(const Matrix& rhs, func f) const {
     if (dim_x_ != rhs.dim_x_ || dim_y_ != rhs.dim_y_) {
         throw std::invalid_argument("Dimensions must be equal");
     }
     
-    double new_elements[dim_x_ * dim_y_];
-    for (int i = 0; i < dim_x_ * dim_y_; i++) {
-        new_elements[i] = elements_[i] * rhs.elements_[i];
-    }
-    
-    return Matrix(dim_x_, dim_y_, new_elements);
+    std::vector<double> elements;
+    elements.reserve(elements_.size());
+
+    std::transform(elements_.begin(), elements_.end(), rhs.elements_.begin(),
+        std::back_inserter(elements), f);
+
+    return Matrix(dim_x_, dim_y_, elements);
 }
 
 Matrix Matrix::transpose() const {
-    double new_elements[dim_x_ * dim_y_];
-    for (int i = 0; i < dim_x_ * dim_y_; i++) {
-        new_elements[i] = elements_[i % dim_x_ * dim_y_ + i / dim_x_];
+    std::vector<double> elements;
+    elements.reserve(dim_x_ * dim_y_);
+    for (std::vector<double>::size_type i = 0; i < elements_.size(); i++) {
+        elements.push_back(elements_[i % dim_x_ * dim_y_ + i / dim_x_]);
     }
 
-    return Matrix(dim_y_, dim_x_, new_elements);
+    return Matrix(dim_y_, dim_x_, elements);
 }
 
 double Matrix::det() const {
@@ -166,8 +151,8 @@ Matrix Matrix::getMinorSubmatrix(int x, int y) const {
     }
     
     int sub_dim = dim_x_ - 1;
-    double sub_elements[sub_dim * sub_dim];
-    int ind = 0;
+    std::vector<double> elements;
+    elements.reserve(sub_dim * sub_dim);
     for (int i = 0; i < dim_x_; i++) {
         if (i == x) {
             continue;
@@ -176,19 +161,14 @@ Matrix Matrix::getMinorSubmatrix(int x, int y) const {
             if (j == y) {
                 continue;
             }
-            sub_elements[ind] = (*this)(i, j);
-            ind++;
+            elements.push_back((*this)(i, j));
         }
     }
 
-    return Matrix(sub_dim, sub_dim, sub_elements);
+    return Matrix(sub_dim, sub_dim, elements);
 }
 
 Matrix Matrix::f(double (*f)(double)) const {
-    double new_elements[dim_x_ * dim_y_];
-    for (int i = 0; i < dim_x_ * dim_y_; i++) {
-        new_elements[i] = (*f)(elements_[i]);
-    }
-
-    return Matrix(dim_x_, dim_y_, new_elements);
+    return elementwise(f);
 }
+
